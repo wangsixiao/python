@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from app.config import settings
@@ -9,6 +9,19 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class Base(DeclarativeBase):
     pass
+
+
+def init_db():
+    from app import models  # noqa: F401
+
+    Base.metadata.create_all(bind=engine)
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                "ALTER TABLE items ADD COLUMN IF NOT EXISTS category_id INTEGER "
+                "REFERENCES categories(id)"
+            )
+        )
 
 
 def get_db():
