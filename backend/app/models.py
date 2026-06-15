@@ -40,3 +40,20 @@ class Item(Base):
     )
 
     category: Mapped[Optional["Category"]] = relationship(back_populates="items")
+
+
+class GeneratedImage(Base):
+    __tablename__ = "generated_images"
+
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    prompt: Mapped[str] = mapped_column(Text, nullable=False)
+    visual_brief: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    image_url: Mapped[str] = mapped_column(Text, nullable=False)
+    model: Mapped[Optional[str]] = mapped_column(String(64), nullable=True)
+    size: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )

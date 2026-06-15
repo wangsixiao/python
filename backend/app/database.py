@@ -22,6 +22,18 @@ def init_db():
                 "REFERENCES categories(id)"
             )
         )
+        conn.execute(
+            text(
+                "ALTER TABLE generated_images ADD COLUMN IF NOT EXISTS "
+                "visual_brief TEXT"
+            )
+        )
+        conn.execute(
+            text(
+                "ALTER TABLE generated_images ADD COLUMN IF NOT EXISTS "
+                "model VARCHAR(64)"
+            )
+        )
 
 
 def get_db():

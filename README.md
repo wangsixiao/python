@@ -49,6 +49,8 @@ uvicorn app.main:app --reload --port 8000
 
 API 文档：http://localhost:8000/docs
 
+后端日志会输出到运行 `uvicorn` 的终端，包含每个请求的方法、路径、状态码、耗时，以及 HTTP 错误和 DashScope 调用的详细信息。可在 `backend/.env` 中设置 `LOG_LEVEL=DEBUG` 查看更详细日志。
+
 ### 3. 启动前端
 
 ```bash
@@ -66,9 +68,10 @@ npm run dev
 | `categories` | 分类（如：书籍、电子产品） |
 | `items` | 物品，通过 `category_id` 关联分类（一对多） |
 
-前端两个页面：
+前端三个页面：
 - **物品管理** `/` — 增删改查物品，可选择分类、按分类筛选
 - **分类管理** `/categories` — 增删改查分类，显示每个分类下的物品数量
+- **文生图** `/images` — 输入提示词，调用阿里云 qwen-image-2.0-pro 生成图片并查看历史
 
 ## API 接口
 
@@ -91,6 +94,23 @@ npm run dev
 | POST | /api/category/add | 新增 |
 | POST | /api/category/update | 更新 |
 | POST | /api/category/delete | 删除（分类下有物品时不可删） |
+
+**文生图**
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | /api/image/generate | LLM 分析 prompt 生成 Visual Brief，再调用 qwen-image-2.0-pro 出图 |
+| GET | /api/image/list | 历史记录列表 |
+| GET | /api/image/detail | 详情（?id=1） |
+| POST | /api/image/delete | 删除记录 |
+
+在 `backend/.env` 中配置阿里云百炼 API Key：
+
+```
+DASHSCOPE_API_KEY=sk-your-api-key-here
+LLM_MODEL=qwen-plus
+IMAGE_MODEL=qwen-image-2.0-pro
+```
 
 ## 环境变量
 

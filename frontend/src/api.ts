@@ -2,6 +2,10 @@ import type {
   Category,
   CategoryCreate,
   CategoryUpdate,
+  GeneratedImage,
+  ImageGenerate,
+  ImageModelOption,
+  LlmModelOption,
   Item,
   ItemCreate,
   ItemUpdate,
@@ -71,6 +75,34 @@ export const itemApi = {
 
   delete: (id: number) =>
     request<{ success: boolean }>(`${API_BASE}/delete`, {
+      method: 'POST',
+      body: JSON.stringify({ id }),
+    }),
+}
+
+export const imageApi = {
+  models: () => request<ImageModelOption[]>(`${API_BASE}/image/models`),
+
+  llmModels: () => request<LlmModelOption[]>(`${API_BASE}/image/llm-models`),
+
+  list: (keyword?: string) => {
+    const query = keyword?.trim()
+      ? `?q=${encodeURIComponent(keyword.trim())}`
+      : ''
+    return request<GeneratedImage[]>(`${API_BASE}/image/list${query}`)
+  },
+
+  detail: (id: number) =>
+    request<GeneratedImage>(`${API_BASE}/image/detail?id=${id}`),
+
+  generate: (data: ImageGenerate) =>
+    request<GeneratedImage>(`${API_BASE}/image/generate`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
+  delete: (id: number) =>
+    request<{ success: boolean }>(`${API_BASE}/image/delete`, {
       method: 'POST',
       body: JSON.stringify({ id }),
     }),

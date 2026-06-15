@@ -1,6 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session, joinedload
 
 from app import models, schemas
@@ -137,5 +137,79 @@ def delete_item(db: Session, item_id: int):
         return False
 
     db.delete(db_item)
+    db.commit()
+    return True
+
+
+def serialize_generated_image(
+    image: models.GeneratedImage,
+) -> schemas.GeneratedImageResponse:
+    return schemas.GeneratedImageResponse(
+        id=image.id,
+        prompt=image.prompt,
+        visual_brief=image.visual_brief,
+        image_url=image.image_url,
+        model=image.model,
+        size=image.size,
+        created_at=image.created_at,
+        updated_at=image.updated_at,
+    )
+
+
+def get_generated_images(
+    db: Session, skip: int = 0, limit: int = 100, keyword: Optional[str] = None
+):
+    query = db.query(models.GeneratedImage)
+    if keyword:
+        pattern = f"%{keyword}%"
+        query = query.filter(
+            or_(
+                models.GeneratedImage.prompt.ilike(pattern),
+                models.GeneratedImage.visual_brief.ilike(pattern),
+            )
+        )
+    return (
+        query.order_by(models.GeneratedImage.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
+def get_generated_image(db: Session, image_id: int):
+    return (
+        db.query(models.GeneratedImage)
+        .filter(models.GeneratedImage.id == image_id)
+        .first()
+    )
+
+
+def create_generated_image(
+    db: Session,
+    prompt: str,
+    image_url: str,
+    size: Optional[str] = None,
+    visual_brief: Optional[str] = None,
+    model: Optional[str] = None,
+):
+    db_image = models.GeneratedImage(
+        prompt=prompt,
+        visual_brief=visual_brief,
+        image_url=image_url,
+        model=model,
+        size=size,
+    )
+    db.add(db_image)
+    db.commit()
+    db.refresh(db_image)
+    return db_image
+
+
+def delete_generated_image(db: Session, image_id: int):
+    db_image = get_generated_image(db, image_id)
+    if not db_image:
+        return False
+
+    db.delete(db_image)
     db.commit()
     return True
