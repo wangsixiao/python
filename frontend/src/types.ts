@@ -71,3 +71,21 @@ export interface ImageGenerate {
 }
 
 export type ImageGenerateMode = 'direct' | 'visual_brief'
+
+export interface AgentChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+export interface AgentToolCallLog {
+  id: string
+  name: string
+  arguments: Record<string, unknown>
+  result: { ok: boolean; data?: unknown; error?: string }
+}
+
+export interface AgentChatResponse {
+  message: string
+  tool_calls: AgentToolCallLog[]
+  finish_reason: string
+}

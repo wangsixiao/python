@@ -9,6 +9,8 @@ import type {
   Item,
   ItemCreate,
   ItemUpdate,
+  AgentChatMessage,
+  AgentChatResponse,
 } from './types'
 
 const API_BASE = '/api'
@@ -105,5 +107,16 @@ export const imageApi = {
     request<{ success: boolean }>(`${API_BASE}/image/delete`, {
       method: 'POST',
       body: JSON.stringify({ id }),
+    }),
+}
+
+export const agentApi = {
+  chat: (messages: AgentChatMessage[], llmModel?: string) =>
+    request<AgentChatResponse>(`${API_BASE}/agent/chat`, {
+      method: 'POST',
+      body: JSON.stringify({
+        messages,
+        llm_model: llmModel,
+      }),
     }),
 }

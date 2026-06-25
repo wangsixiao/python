@@ -381,3 +381,145 @@ tr.active {
 .link-button:hover {
   background: #cbd5e1;
 }
+
+.agent-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.agent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.agent-header h2 {
+  margin: 0 0 0.25rem;
+}
+
+.agent-model-field {
+  min-width: 200px;
+}
+
+.agent-chat {
+  min-height: 360px;
+  max-height: 520px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.agent-empty {
+  margin: auto 0;
+  text-align: center;
+  color: #64748b;
+}
+
+.agent-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.agent-message {
+  max-width: 88%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+}
+
+.agent-message-user {
+  align-self: flex-end;
+  background: #2563eb;
+  color: #fff;
+}
+
+.agent-message-assistant {
+  align-self: flex-start;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+}
+
+.agent-message-role {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+  opacity: 0.8;
+}
+
+.agent-message-content {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.agent-typing {
+  color: #64748b;
+  font-style: italic;
+}
+
+.agent-tool-calls {
+  margin-top: 0.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.agent-tool-call {
+  font-size: 0.8125rem;
+  background: #f1f5f9;
+  border-radius: 8px;
+  padding: 0.375rem 0.5rem;
+}
+
+.agent-tool-call summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.agent-tool-call summary::-webkit-details-marker {
+  display: none;
+}
+
+.agent-tool-status.ok {
+  color: #16a34a;
+}
+
+.agent-tool-status.error {
+  color: #dc2626;
+}
+
+.agent-tool-call pre {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  overflow-x: auto;
+  max-height: 160px;
+}
+
+.agent-input-form textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font: inherit;
+  resize: vertical;
+}
+
+.agent-input-form textarea:focus {
+  outline: 2px solid #3b82f6;
+  border-color: #3b82f6;
+}

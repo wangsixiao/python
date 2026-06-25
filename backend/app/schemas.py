@@ -151,3 +151,37 @@ class GeneratedImageResponse(BaseModel):
     size: Optional[str] = None
     created_at: datetime
     updated_at: datetime
+
+
+class AgentChatMessage(BaseModel):
+    role: str = Field(..., pattern="^(user|assistant)$")
+    content: str = Field(..., min_length=1, max_length=8000)
+
+
+class AgentChatRequest(BaseModel):
+    messages: list[AgentChatMessage] = Field(..., min_length=1, max_length=40)
+    llm_model: Optional[str] = Field(None, max_length=64)
+
+    @model_validator(mode="after")
+    def validate_llm_model(self):
+        if self.llm_model is not None and self.llm_model not in ALLOWED_LLM_MODELS:
+            raise ValueError(
+                f"llm_model must be one of {sorted(ALLOWED_LLM_MODELS)}, "
+                f"got {self.llm_model!r}"
+            )
+        if self.messages[-1].role != "user":
+            raise ValueError("Last message must be from user")
+        return self
+
+
+class AgentToolCallLog(BaseModel):
+    id: str
+    name: str
+    arguments: dict
+    result: dict
+
+
+class AgentChatResponse(BaseModel):
+    message: str
+    tool_calls: list[AgentToolCallLog] = []
+    finish_reason: str = "stop"
