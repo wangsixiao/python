@@ -68,9 +68,10 @@ npm run dev
 | `categories` | 分类（如：书籍、电子产品） |
 | `items` | 物品，通过 `category_id` 关联分类（一对多） |
 
-前端三个页面：
+前端四个页面：
 - **物品管理** `/` — 增删改查物品，可选择分类、按分类筛选
 - **分类管理** `/categories` — 增删改查分类，显示每个分类下的物品数量
+- **物品管家** `/agent` — 自然语言对话，Agent 自动调用工具管理分类和物品
 - **文生图** `/images` — 输入提示词，调用阿里云 qwen-image-2.0-pro 生成图片并查看历史
 
 ## API 接口
@@ -103,6 +104,12 @@ npm run dev
 | GET | /api/image/list | 历史记录列表 |
 | GET | /api/image/detail | 详情（?id=1） |
 | POST | /api/image/delete | 删除记录 |
+
+**物品管家 Agent**
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | /api/agent/chat | 发送对话消息，Agent 通过工具调用管理分类和物品 |
 
 在 `backend/.env` 中配置阿里云百炼 API Key：
 

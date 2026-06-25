@@ -13,6 +13,7 @@ from app.models_registry import ALLOWED_IMAGE_MODELS, ALLOWED_LLM_MODELS
 from app.database import get_db, init_db
 from app.logging_config import setup_logging
 from app.middleware.request_logging import RequestLoggingMiddleware
+from app.agents.orchestrator import AgentError, run_agent
 from app.services.image_gen import ImageGenerationError, generate_image
 from app.services.visual_brief import VisualBriefError, generate_visual_brief
 
@@ -256,3 +257,25 @@ def delete_generated_image(
     if not deleted:
         raise HTTPException(status_code=404, detail="Generated image not found")
     return {"success": True}
+
+
+@app.post("/api/agent/chat", response_model=schemas.AgentChatResponse)
+def agent_chat(body: schemas.AgentChatRequest, db: Session = Depends(get_db)):
+    llm_model = body.llm_model or settings.llm_model
+
+    logger.info(
+        "Agent chat request llm_model=%s message_count=%d",
+        llm_model,
+        len(body.messages),
+    )
+
+    try:
+        result = run_agent(
+            db,
+            [message.model_dump() for message in body.messages],
+            llm_model,
+        )
+    except AgentError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    return schemas.AgentChatResponse(**result)
